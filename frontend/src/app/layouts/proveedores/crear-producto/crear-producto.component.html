@@ -1,0 +1,49 @@
+<button style="
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 9999;
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  font-size: 24px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  outline: none;
+  padding: 0;
+  line-height: 1;
+  border: 2px solid white;
+  box-sizing: border-box;
+" onmouseover="this.style.backgroundColor='#2563eb'; this.style.transform='scale(1.1)'; this.style.boxShadow='0 6px 15px rgba(0, 0, 0, 0.3)';"
+  onmouseout="this.style.backgroundColor='#3b82f6'; this.style.transform='scale(1)'; this.style.boxShadow='0 4px 10px rgba(0, 0, 0, 0.2)';"
+  onclick="window.history.back();">
+  ←
+</button>
+<h2>Crear Producto (Proveedor)</h2>
+<form [formGroup]="productoForm" (ngSubmit)="crearProducto()" class="form-crear-producto">
+  <label>Modelo:
+    <input formControlName="modelo" autocomplete="off" />
+  </label>
+  <label>Distribuidor:
+    <select formControlName="distribuidor">
+      <option value="">-- Ninguno --</option>
+      <option *ngFor="let p of proveedoresRegistrados" [value]="p.nombreProveedor">{{ p.nombreProveedor }}</option>
+    </select>
+  </label>
+  <label>Precio:
+    <input type="number" formControlName="precio" />
+  </label>
+  <label>Precio Especial:
+    <input type="number" formControlName="precioespecial" />
+  </label>
+  <div *ngIf="error" class="error">{{ error }}</div>
+  <div *ngIf="exito" class="exito">Producto creado correctamente.</div>
+  <button type="submit" [disabled]="enviado">Crear</button>
+</form>

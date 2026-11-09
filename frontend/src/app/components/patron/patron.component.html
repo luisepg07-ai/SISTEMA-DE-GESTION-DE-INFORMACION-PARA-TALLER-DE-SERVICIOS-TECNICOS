@@ -1,0 +1,49 @@
+<div class="pattern-actions">
+  <button type="button" (click)="resetPattern()">
+    <img src="restart.png" alt="Limpiar patrón" style="width:32px;height:32px;" />
+  </button>
+</div>
+<div class="pattern-container" (mousedown)="startPattern()" (mouseup)="endPattern()" (mousemove)="onMouseMove($event)">
+  <svg class="pattern-lines" width="300" height="300">
+    <ng-container *ngFor="let point of getLineSegments(); let idx = index">
+      <line *ngIf="point"
+            [attr.x1]="point[0][0]" [attr.y1]="point[0][1]"
+            [attr.x2]="point[1][0]" [attr.y2]="point[1][1]"
+            stroke="#1976d2" stroke-width="6" stroke-linecap="round" />
+    </ng-container>
+    <line *ngIf="drawing && pattern.length > 0 && pointerPos"
+          [attr.x1]="getDotPosition(pattern[pattern.length-1][1]) + dotRadius"
+          [attr.y1]="getDotPosition(pattern[pattern.length-1][0]) + dotRadius"
+          [attr.x2]="pointerPos.x"
+          [attr.y2]="pointerPos.y"
+          stroke="#1976d2" stroke-width="6" stroke-linecap="round" stroke-dasharray="6,6" />
+  </svg>
+  <div class="pattern-row" *ngFor="let row of grid; let i = index">
+    <div class="pattern-dot"
+         *ngFor="let col of grid; let j = index"
+         [class.active]="isActive(i, j)"
+         [style.left]="getDotPosition(j) + 'px'"
+         [style.top]="getDotPosition(i) + 'px'"
+         (mouseenter)="addDot(i, j)"
+         (mousedown)="addDot(i, j)">
+    </div>
+  </div>
+</div>
+<div class="pattern-container pattern-replica">
+  <svg class="pattern-lines" width="300" height="300">
+    <ng-container *ngFor="let point of getReplicaLineSegments(); let idx = index">
+      <line *ngIf="point"
+            [attr.x1]="point[0][0]" [attr.y1]="point[0][1]"
+            [attr.x2]="point[1][0]" [attr.y2]="point[1][1]"
+            stroke="#43a047" stroke-width="6" stroke-linecap="round" />
+    </ng-container>
+  </svg>
+  <div class="pattern-row" *ngFor="let row of grid; let i = index">
+    <div class="pattern-dot"
+         *ngFor="let col of grid; let j = index"
+         [class.active]="isReplicaActive(i, j)"
+         [style.left]="getDotPosition(j) + 'px'"
+         [style.top]="getDotPosition(i) + 'px'">
+    </div>
+  </div>
+</div>

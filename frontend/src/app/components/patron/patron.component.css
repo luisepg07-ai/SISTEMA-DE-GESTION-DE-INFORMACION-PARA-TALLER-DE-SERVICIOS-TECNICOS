@@ -1,0 +1,54 @@
+.pattern-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  width: 200px;
+  margin: 40px auto;
+  background: #f5f5f5;
+  border-radius: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+.pattern-row {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+.pattern-dot {
+  position: absolute;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #bbb;
+  border: 2px solid #888;
+  transition: background 0.2s, border 0.2s;
+  z-index: 2;
+}
+.pattern-dot.active {
+  background: #1976d2;
+  border: 2px solid #1976d2;
+}
+.pattern-lines {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 200px;
+  height: 200px;
+  pointer-events: none;
+  z-index: 1;
+}
+.pattern-replica {
+  margin-top: 40px;
+  background: #e8f5e9;
+  width: 200px;
+  height: 200px;
+}
+.pattern-replica .pattern-dot.active {
+  background: #43a047;
+  border-color: #43a047;
+}
+.pattern-replica .pattern-lines line {
+  stroke: #43a047;
+}

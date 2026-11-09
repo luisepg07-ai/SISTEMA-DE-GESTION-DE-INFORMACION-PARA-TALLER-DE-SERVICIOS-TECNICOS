@@ -1,0 +1,38 @@
+<app-header></app-header>
+<h2>Proveedores Registrados</h2>
+
+<button routerLink="/crear-proveedor" class="nuevo-btn" title="Crear nuevo proveedor">
+  <span style="font-size:1.2em; color:#fff;">+</span> Nuevo
+</button>
+<input type="text" placeholder="Buscar por nombre o modelo..." class="filtro-input"
+  (input)="onFiltroChange($any($event.target).value)" />
+<button routerLink="/mostrar-productos" class="producto-btn" title="Ver proveedores registrados">Productos</button>
+<div *ngIf="error" class="error">{{ error }}</div>
+
+<table *ngIf="!cargando" class="tabla-proveedores">
+  <thead>
+    <tr>
+      <th>Proveedor</th>
+      <th>Contacto</th>
+      <th style="width:110px"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let prov of proveedoresPagina">
+      <td>{{ prov.nombreProveedor }}</td>
+      <td>{{ prov.telefono }}</td>
+      <td class="accion-td">
+        <a (click)="editarProveedor(prov)" class="seleccionar-link">Editar</a>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div *ngIf="!cargando && proveedoresPagina.length === 0">No hay proveedores registrados.</div>
+
+<div class="paginacion-container" *ngIf="!cargando && totalPaginas > 1">
+  <button (click)="cambiarPagina(-1)" [disabled]="paginaActual === 1" class="btn-paginacion">Anterior</button>
+  <span>Página {{ paginaActual }} de {{ totalPaginas }}</span>
+  <button (click)="cambiarPagina(1)" [disabled]="paginaActual === totalPaginas"
+    class="btn-paginacion">Siguiente</button>
+</div>

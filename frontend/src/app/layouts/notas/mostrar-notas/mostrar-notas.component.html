@@ -1,0 +1,24 @@
+<app-header></app-header>
+<h2>Notas</h2>
+<button routerLink="/crear-nota" class="nuevo-btn" style="margin-bottom:1em;">
+  <span style="font-size:1.2em; color:#fff;">+</span>Nueva</button>
+
+<input type="text" [ngModel]="filtro$.value" (ngModelChange)="onFiltroChange($event)" placeholder="Buscar por título o contenido" class="filtro-input" standalone />
+<div *ngIf="cargando">Cargando notas...</div>
+<div *ngIf="error" class="error">{{ error }}</div>
+
+<div class="tarjetas-container" *ngIf="!cargando && notasPagina.length">
+  <div class="tarjeta-nota" *ngFor="let nota of notasPagina" (click)="seleccionarNota(nota)">
+    <h3 class="tarjeta-titulo">{{ nota.titulo }}</h3>
+    <p class="tarjeta-contenido">{{ nota.contenido }}</p>
+  </div>
+</div>
+
+<div *ngIf="!cargando && !notasFiltradas.length">No hay notas.</div>
+
+
+<div class="paginacion-container" *ngIf="!cargando && totalPaginas > 1">
+  <button (click)="cambiarPagina(-1)" [disabled]="paginaActual === 1" class="btn-paginacion">Anterior</button>
+  <span>Página {{ paginaActual }} de {{ totalPaginas }}</span>
+  <button (click)="cambiarPagina(1)" [disabled]="paginaActual === totalPaginas" class="btn-paginacion">Siguiente</button>
+</div>

@@ -1,0 +1,47 @@
+<button style="
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 9999;
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  font-size: 24px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  outline: none;
+  padding: 0;
+  line-height: 1;
+  border: 2px solid white;
+  box-sizing: border-box;
+" onmouseover="this.style.backgroundColor='#2563eb'; this.style.transform='scale(1.1)'; this.style.boxShadow='0 6px 15px rgba(0, 0, 0, 0.3)';"
+  onmouseout="this.style.backgroundColor='#3b82f6'; this.style.transform='scale(1)'; this.style.boxShadow='0 4px 10px rgba(0, 0, 0, 0.2)';"
+  onclick="window.history.back();">
+  ←
+</button>
+<h2>Editar Componente de Stock</h2>
+<form [formGroup]="stockForm" (ngSubmit)="editarStock()" class="form-editar-stock">
+  <label>Componente:<input formControlName="componente" autocomplete="off"></label>
+  <label>Descripción:<textarea formControlName="descripcion" rows="3"></textarea></label>
+  <label>Cantidad:<input type="number" formControlName="cantidad" min="0"></label>
+  <div *ngIf="error" class="error">{{ error }}</div>
+  <div *ngIf="exito" class="exito">Componente editado correctamente.</div>
+  <button type="submit" [disabled]="enviado">Guardar Cambios</button>
+  <button type="button" class="btn-eliminar" (click)="eliminarStock()"
+    style="margin-top:1em;background:#d32f2f;color:#fff;">Eliminar Componente</button>
+
+  <div *ngIf="mostrarConfirmacion" class="modal-confirm">
+    <div class="modal-content">
+      <p>¿Seguro que deseas eliminar este componente de stock?</p>
+      <button (click)="confirmarEliminacion()" style="background:#d32f2f;color:#fff;margin-right:1em;">Sí</button>
+      <button (click)="mostrarConfirmacion = false">No</button>
+    </div>
+  </div>
+</form>

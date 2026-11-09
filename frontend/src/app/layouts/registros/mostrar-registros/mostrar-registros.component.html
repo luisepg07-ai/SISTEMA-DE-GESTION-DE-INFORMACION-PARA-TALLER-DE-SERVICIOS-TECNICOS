@@ -1,0 +1,39 @@
+<app-header></app-header>
+<h2>Registros</h2>
+<div *ngIf="error" class="error">{{ error }}</div>
+<button routerLink="/crear-registro" class="nuevo-btn" title="Crear nuevo registro">
+  <span style="font-size:1.2em; color:#fff;">+</span>  Nuevo
+</button>
+<input type="text" [ngModel]="filtro$.value" (ngModelChange)="onFiltroChange($event)" placeholder="Buscar por nombre, dispositivo, modelo o estado" class="filtro-input" standalone />
+
+<div class="tarjetas-container" *ngIf="!cargando && registrosPagina.length">
+  <div class="tarjeta-registro"
+       *ngFor="let registro of registrosPagina"
+       [ngClass]="{
+         'fondo-entregado': registro.estado === 'entregado',
+         'fondo-terminado': registro.estado === 'terminado',
+         'fondo-pendiente': registro.estado === 'pendiente'
+       }"
+       (click)="seleccionarRegistro(registro)">
+    <div class="tarjeta-header">
+      <span class="tarjeta-nombre">{{ registro.nombre }}</span>
+      <span class="tarjeta-estado" [ngClass]="registro.estado">{{ registro.estado }}</span>
+    </div>
+    <div class="tarjeta-fecha">{{ registro.fecha | date:'dd/MM/yyyy HH:mm' }}</div>
+    <div class="tarjeta-info"><b>Dispositivo:</b> {{ registro.dispositivo }}</div>
+    <div class="tarjeta-info"><b>Modelo:</b> {{ registro.modelo }}</div>
+    <div class="tarjeta-info"><b>Daño:</b> {{ registro.dano }}</div>
+    <div class="tarjeta-info"><b>Reparación:</b> {{ registro.reparacion }}</div>
+    <div class="tarjeta-info"><b>Costo de reparación:</b> {{ registro.saldoPagar }}</div>
+    <div class="tarjeta-info"><b>Teléfono:</b> {{ registro.telefono }}</div>
+    <div class="tarjeta-info"><b>Nota:</b> {{ registro.nota }}</div>
+  </div>
+</div>
+<div *ngIf="!cargando && !registrosPagina.length">No hay registros.</div>
+
+<div class="paginacion-container" *ngIf="!cargando && totalPaginas > 1">
+  <button (click)="cambiarPagina(-1)" [disabled]="paginaActual === 1" class="btn-paginacion">Anterior</button>
+  <span>Página {{ paginaActual }} de {{ totalPaginas }}</span>
+  <button (click)="cambiarPagina(1)" [disabled]="paginaActual === totalPaginas" class="btn-paginacion">Siguiente</button>
+</div>
+

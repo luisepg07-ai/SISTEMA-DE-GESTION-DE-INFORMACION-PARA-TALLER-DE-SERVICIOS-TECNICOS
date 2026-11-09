@@ -1,0 +1,23 @@
+<app-header></app-header>
+<h2>Stock</h2>
+<button routerLink="/crear-stock" class="nuevo-btn" title="Crear nuevo producto">
+  <span style="font-size:1.2em; color:#fff;">+</span> Nuevo
+</button>
+<div *ngIf="cargando">Cargando stock...</div>
+<div *ngIf="error" class="error">{{ error }}</div>
+
+<input type="text" (input)="onFiltroChange($any($event.target).value)" placeholder="Buscar por componente o descripción" class="filtro-input" standalone />
+
+<div class="tarjetas-container" *ngIf="!cargando && stockPagina.length">
+  <div class="tarjeta-stock" *ngFor="let item of stockPagina" (click)="seleccionarStock(item)">
+    <h3 class="tarjeta-titulo">{{ item.componente }}</h3>
+    <p class="tarjeta-descripcion">{{ item.descripcion }}</p>
+    <span class="tarjeta-cantidad">Cantidad: {{ item.cantidad }}</span>
+  </div>
+</div>
+<div *ngIf="!cargando && !stockFiltrado.length">No hay componentes en stock.</div>
+<div class="paginacion-container" *ngIf="!cargando && totalPaginas > 1">
+  <button (click)="cambiarPagina(-1)" [disabled]="paginaActual === 1" class="btn-paginacion">Anterior</button>
+  <span>Página {{ paginaActual }} de {{ totalPaginas }}</span>
+  <button (click)="cambiarPagina(1)" [disabled]="paginaActual === totalPaginas" class="btn-paginacion">Siguiente</button>
+</div>

@@ -1,0 +1,119 @@
+<button style="
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 9999;
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  font-size: 24px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  outline: none;
+  padding: 0;
+  line-height: 1;
+  border: 2px solid white;
+  box-sizing: border-box;
+" onmouseover="this.style.backgroundColor='#2563eb'; this.style.transform='scale(1.1)'; this.style.boxShadow='0 6px 15px rgba(0, 0, 0, 0.3)';"
+  onmouseout="this.style.backgroundColor='#3b82f6'; this.style.transform='scale(1)'; this.style.boxShadow='0 4px 10px rgba(0, 0, 0, 0.2)';"
+  onclick="window.history.back();">
+  ←
+</button>
+<h2>Crear Registro</h2>
+
+<form [formGroup]="registroForm" (ngSubmit)="crearRegistroDuplicado()" class="form-crear-registro">
+  <label>Nombre:<input formControlName="nombre" autocomplete="off"></label>
+  <label>Fecha:<input type="datetime-local" formControlName="fecha"></label>
+  <label>Dispositivo:<input formControlName="dispositivo" autocomplete="off"></label>
+  <label>Modelo:<input formControlName="modelo" autocomplete="off"></label>
+  <label>Daño:<input formControlName="dano" autocomplete="off"></label>
+  <label>Reparación:<input formControlName="reparacion" autocomplete="off"></label>
+  <label>Costo de reparación:<input type="number" formControlName="saldoPagar"></label>
+  <label>Teléfono:<input formControlName="telefono" autocomplete="off"></label>
+  <label>Nota:<textarea formControlName="nota" class="styled-textarea" autocomplete="off"></textarea></label>
+  <label>Estado:
+    <select formControlName="estado" class="styled-select">
+      <option value="pendiente" selected>Pendiente</option>
+      <option value="terminado">Terminado</option>
+      <option value="entregado">Entregado</option>
+    </select>
+  </label>
+  <label>Patrón de bloqueo (opcional):</label>
+  <app-patron (patronChange)="onPatronChange($event)"></app-patron>
+  <div *ngIf="error" class="error">{{ error }}</div>
+  <div *ngIf="exito" class="exito">Registro creado correctamente.</div>
+  <button type="submit" [disabled]="enviado">Crear</button>
+  <button type="submit" [disabled]="enviado" (click)="interruptor = true">Crear Duplicado</button>
+
+  <div *ngIf="componentesSeleccionados.length > 0" class="componentes-seleccionados"
+    style="margin-bottom: 1.5em; margin-top: 1.5em; padding: 1em; background-color: #f5f5f5; border-radius: 8px; border: 1px solid #ddd;">
+    <h4 style="margin-top: 0; margin-bottom: 10px;">Componentes Seleccionados:</h4>
+    <ul style="list-style-type: none; padding: 0; margin: 0;">
+      <li *ngFor="let comp of componentesSeleccionados; let i = index"
+        style="display: flex; justify-content: space-between; align-items: center; padding: 8px; border-bottom: 1px solid #ddd; background-color: white; margin-bottom: 5px; border-radius: 4px;">
+        <span><strong>{{ comp.componente }}</strong> - {{ comp.descripcion }}</span>
+        <button type="button" (click)="quitarComponente(i)"
+          style="background-color: #e74c3c; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">Quitar</button>
+      </li>
+    </ul>
+  </div>
+
+  <div style="text-align: center; margin-bottom: 1em; margin-top: 1em;">
+    <button type="button" class="btn-ver-stock" (click)="abrirModalStock()">Seleccionar Componentes del Stock</button>
+  </div>
+</form>
+
+<div class="modal-overlay" *ngIf="mostrarModalStock">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>Stock Disponible</h3>
+      <button type="button" class="btn-cerrar-modal" (click)="cerrarModalStock()">X</button>
+    </div>
+
+    <div class="modal-body">
+      <input type="text" placeholder="Buscar por componente..." class="filtro-input"
+        style="width: 100%; margin-bottom: 1em; padding: 0.5em; border: 1px solid #ccc; border-radius: 4px;"
+        (input)="onFiltroStockChange($any($event.target).value)" />
+
+      <div *ngIf="cargandoStock" style="text-align: center;">Cargando stock...</div>
+      <table *ngIf="!cargandoStock && stockList.length > 0" class="stock-table">
+        <thead>
+          <tr>
+            <th>Componente</th>
+            <th>Descripción</th>
+            <th>Cantidad</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of paginatedStockList" (click)="agregarComponente(item)" [ngStyle]="{
+              'cursor': item.cantidad === 0 ? 'not-allowed' : 'pointer',
+              'opacity': item.cantidad === 0 ? '0.5' : '1',
+              'background-color': componentesSeleccionados.includes(item) ? '#d4edda' : 'transparent'
+            }">
+            <td>{{ item.componente }}</td>
+            <td>{{ item.descripcion }}</td>
+            <td [ngClass]="{'bajo-stock': item.cantidad <= 2}">{{ item.cantidad }}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div *ngIf="!cargandoStock && totalPages > 1" class="pagination-controls"
+        style="text-align: center; margin-top: 15px;">
+        <button type="button" (click)="prevPage()" [disabled]="currentPage === 1"
+          style="margin-right: 15px; padding: 5px 10px; cursor: pointer; border-radius: 4px; ">Anterior</button>
+        <span style="font-weight: bold;">Página {{ currentPage }} de {{ totalPages }}</span>
+        <button type="button" (click)="nextPage()" [disabled]="currentPage === totalPages"
+          style="margin-left: 15px; padding: 5px 10px; cursor: pointer; border-radius: 4px; ">Siguiente</button>
+      </div>
+
+      <div *ngIf="!cargandoStock && stockList.length === 0" style="text-align: center;">No hay stock disponible.</div>
+    </div>
+  </div>
+</div>

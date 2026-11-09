@@ -1,0 +1,86 @@
+<button style="
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 9999;
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  font-size: 24px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  outline: none;
+  padding: 0;
+  line-height: 1;
+  border: 2px solid white;
+  box-sizing: border-box;
+" 
+onmouseover="this.style.backgroundColor='#2563eb'; this.style.transform='scale(1.1)'; this.style.boxShadow='0 6px 15px rgba(0, 0, 0, 0.3)';"
+onmouseout="this.style.backgroundColor='#3b82f6'; this.style.transform='scale(1)'; this.style.boxShadow='0 4px 10px rgba(0, 0, 0, 0.2)';"
+onclick="window.history.back();">
+  ←
+</button>
+
+<div class="contenedor-editar-usuario">
+  <h2>Editar Usuario</h2>
+
+  <div *ngIf="mensaje" [ngClass]="'mensaje-' + tipoMensaje" class="mensaje">
+    {{ mensaje }}
+  </div>
+
+  <form [formGroup]="formulario" (ngSubmit)="guardarCambios()">
+    <div class="formulario-grupo">
+      <label for="nombre">Nombre:</label>
+      <input
+        id="nombre"
+        type="text"
+        formControlName="nombre"
+        placeholder="Nombre del usuario"
+        [attr.disabled]="cargando ? true : null"
+      />
+      <span *ngIf="formulario.get('nombre')?.touched && formulario.get('nombre')?.hasError('required')" class="error">
+        El nombre es requerido
+      </span>
+      <span *ngIf="formulario.get('nombre')?.touched && formulario.get('nombre')?.hasError('minlength')" class="error">
+        El nombre debe tener al menos 3 caracteres
+      </span>
+    </div>
+
+    <div class="formulario-grupo">
+      <label for="contraseña">Nueva Contraseña <span class="opcional">(opcional)</span>:</label>
+      <input
+        id="contraseña"
+        type="password"
+        formControlName="contraseña"
+        placeholder="Dejar vacío para no cambiarla"
+        [attr.disabled]="cargando ? true : null"
+      />
+      <span *ngIf="formulario.get('contraseña')?.touched && formulario.get('contraseña')?.hasError('minlength')" class="error">
+        La contraseña debe tener al menos 6 caracteres
+      </span>
+    </div>
+
+    <div class="formulario-grupo checkbox">
+      <label for="admin">
+        <input
+          id="admin"
+          type="checkbox"
+          formControlName="admin"
+          [attr.disabled]="cargando ? true : null"
+        />
+        ¿Es administrador?
+      </label>
+    </div>
+
+    <button type="submit" [disabled]="formulario.invalid || cargando" class="btn-enviar">
+      {{ cargando ? 'Guardando...' : 'Guardar Cambios' }}
+    </button>
+  </form>
+</div>

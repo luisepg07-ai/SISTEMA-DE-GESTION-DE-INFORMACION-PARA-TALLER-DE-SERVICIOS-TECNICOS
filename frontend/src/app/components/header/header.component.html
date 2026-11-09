@@ -1,0 +1,13 @@
+<header class="header">
+  <h1>Celuciones System</h1>
+  <button class="logout-btn" (click)="logout()" title="Cerrar sesión">
+    <img src="logout.png" alt="Cerrar sesión" style="height: 1.5em; width: 1.5em; vertical-align: middle;" />
+  </button>
+</header>
+<nav class="nav-bar">
+  <a *ngIf="isAdmin" routerLink="/home" >Inicio</a>
+  <a routerLink="/mostrar-registros" >Registros</a>
+  <a routerLink="/mostrar-productos">Proveedor</a>
+  <a routerLink="/mostrar-notas">Notas</a>
+  <a routerLink="/mostrar-stock">Stock</a>
+</nav>

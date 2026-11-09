@@ -1,0 +1,89 @@
+<button style="
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 9999;
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  font-size: 24px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  outline: none;
+  padding: 0;
+  line-height: 1;
+  border: 2px solid white;
+  box-sizing: border-box;
+" 
+onmouseover="this.style.backgroundColor='#2563eb'; this.style.transform='scale(1.1)'; this.style.boxShadow='0 6px 15px rgba(0, 0, 0, 0.3)';"
+onmouseout="this.style.backgroundColor='#3b82f6'; this.style.transform='scale(1)'; this.style.boxShadow='0 4px 10px rgba(0, 0, 0, 0.2)';"
+onclick="window.history.back();">
+  ←
+</button>
+
+<div class="contenedor-crear-usuario">
+  <h2>Crear Nuevo Usuario</h2>
+
+  <div *ngIf="mensaje" [ngClass]="'mensaje-' + tipoMensaje" class="mensaje">
+    {{ mensaje }}
+  </div>
+
+  <form [formGroup]="formulario" (ngSubmit)="crearUsuario()">
+    <div class="formulario-grupo">
+      <label for="nombre">Nombre:</label>
+      <input
+        id="nombre"
+        type="text"
+        formControlName="nombre"
+        placeholder="Ingresa el nombre del usuario"
+        [disabled]="cargando"
+      />
+      <span *ngIf="formulario.get('nombre')?.hasError('required')" class="error">
+        El nombre es requerido
+      </span>
+      <span *ngIf="formulario.get('nombre')?.hasError('minlength')" class="error">
+        El nombre debe tener al menos 3 caracteres
+      </span>
+    </div>
+
+    <div class="formulario-grupo">
+      <label for="contraseña">Contraseña:</label>
+      <input
+        id="contraseña"
+        type="password"
+        formControlName="contraseña"
+        placeholder="Ingresa una contraseña"
+        [disabled]="cargando"
+      />
+      <span *ngIf="formulario.get('contraseña')?.hasError('required')" class="error">
+        La contraseña es requerida
+      </span>
+      <span *ngIf="formulario.get('contraseña')?.hasError('minlength')" class="error">
+        La contraseña debe tener al menos 6 caracteres
+      </span>
+    </div>
+
+    <div class="formulario-grupo checkbox">
+      <label for="admin">
+        <input
+          id="admin"
+          type="checkbox"
+          formControlName="admin"
+          [disabled]="cargando"
+        />
+        ¿Es administrador?
+      </label>
+    </div>
+
+    <button type="submit" [disabled]="formulario.invalid || cargando" class="btn-enviar">
+      {{ cargando ? 'Creando...' : 'Crear Usuario' }}
+    </button>
+  </form>
+</div>
